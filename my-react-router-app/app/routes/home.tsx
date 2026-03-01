@@ -10,5 +10,12 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <div>
+      <Welcome />
+      <div style={{padding: '20px'}}>
+        <GMap/>
+      </div>
+    </div>
+  )
 }

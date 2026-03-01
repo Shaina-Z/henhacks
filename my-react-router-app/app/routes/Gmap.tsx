@@ -12,7 +12,7 @@ const flower_path = [
 ]
 
 
-type Poi ={ key: string, location: { lat: number, lng: number}, flower: string }
+type Poi ={ key: string, location: google.maps.LatLngLiteral, flower: string }
 
 // For demo purposes, in a full-scale deployment, these would be stored in a database
 const locations: Poi[] = [
@@ -21,10 +21,16 @@ const locations: Poi[] = [
   {key: "rose", location: {lat: 39.680159, lng: -75.752194}, flower: flower_path[2]}
 ]
 
+const containerStyle = {
+    width: '70%',
+    height: '400px', // Set a specific height
+
+  };
+
 export const GMap = () => (
   <APIProvider apiKey={"API_KEY"}>
+    <div style={containerStyle}>
     <Map
-      style={{width: '100vw', height: '100vh'}}
       defaultCenter={{lat: 39.68152, lng: -75.74065}}
       defaultZoom={12}
       gestureHandling='greedy'
@@ -33,10 +39,11 @@ export const GMap = () => (
     >
       <PoiMarkers pois={locations}/>
     </Map>
+    </div>
   </APIProvider>
-
-
 );
+
+
 
 const PoiMarkers = (props: {pois: Poi[]}) => {
   return (
