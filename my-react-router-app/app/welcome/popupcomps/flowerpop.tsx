@@ -104,12 +104,12 @@ export function FlowerPop() {
         {panel === "choose" ? (
           /* choose a plant first */
           <div className="flex flex-col items-center space-y-3">
-            <p className="text-sm font-medium">Pick your flower:</p>
+            <p className="text-sm font-medium text-blue-700">Pick your flower:</p>
             <div className="grid grid-cols-2 gap-2">
               {PLANT_OPTIONS.map((opt) => (
                 <label
                   key={opt.alt}
-                  className="flex cursor-pointer items-center gap-2 rounded border p-1 hover:bg-gray-200"
+                  className="flex cursor-pointer items-center gap-2 rounded border p-1 bg-blue-300 hover:bg-blue-100"
                 >
                   <input
                     type="radio"
