@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import sprout from "../Sprout.webp";
 import halfBloom from "../Half_bloom.webp";
 import greenCarnation from "../Green_Carnation.webp";
@@ -7,6 +7,7 @@ import pansies from "../Pansies.webp";
 import rose from "../Rose.webp";
 import tieDyeRose from "../Tie-dye_Rose.webp";
 import violet from "../Violet.webp";
+import { PickFlower } from "./pickflower";
 
 const PLANT_OPTIONS = [
 { image: violet, alt: "Violets", info : "Sappho, the ancient Greek poet, often referenced violets in her poems, associating them with female love and affection." },
@@ -45,13 +46,18 @@ function picktasks(taskCount: number) {
 }
 
 //creates a popup button on the bottom right of the screen that shows a sprout when clicked.
-export function FlowerPop() {
+type FlowerPopProps = {
+  onPickFlower?: (flower: { image: string; alt: string }) => void;
+  resetCycle?: number;
+};
+
+export function FlowerPop({ onPickFlower, resetCycle = 0 }: FlowerPopProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [panel, setPanel] = useState<"choose" | "tasks">("choose");
   // which plant the user picked; used both for display in selector and final flower image
   const [chosen, setChosen] = useState<string>(PLANT_OPTIONS[0].alt);
 
-  const [selectedTasks] = useState(() => picktasks(3));
+  const [selectedTasks, setSelectedTasks] = useState(() => picktasks(3));
   const [tasks, setTasks] = useState([false, false, false]);
 
   const checkCount = tasks.filter(Boolean).length;
@@ -85,6 +91,29 @@ export function FlowerPop() {
     setPanel("tasks");
     setIsOpen(true);
   };
+
+  const handlePickFlower = () => {
+    if (checkCount !== 3) {
+      return;
+    }
+
+    const plantObj = PLANT_OPTIONS.find((opt) => opt.alt === chosen);
+
+    if (!plantObj) {
+      return;
+    }
+
+    onPickFlower?.({ image: plantObj.image, alt: plantObj.alt });
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    setPanel("choose");
+    setChosen(PLANT_OPTIONS[0].alt);
+    setTasks([false, false, false]);
+    setSelectedTasks(picktasks(3));
+    setIsOpen(true);
+  }, [resetCycle]);
 
   return (
     <details
@@ -173,6 +202,8 @@ export function FlowerPop() {
                 />
               </label>
             </div>
+
+            {checkCount === 3 && <PickFlower onPickFlower={handlePickFlower} />}
           </>
         )}
 
