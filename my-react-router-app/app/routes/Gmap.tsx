@@ -1,6 +1,7 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {AdvancedMarker, APIProvider, Map, Pin} from '@vis.gl/react-google-maps';
+import dotenv from 'dotenv';
 
 const flower_path = [
   "/app/welcome/Green_Carnation.webp",
@@ -11,6 +12,7 @@ const flower_path = [
   "/app/welcome/Tie-dye_Rose.webp"
 ]
 
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 type Poi ={ key: string, location: google.maps.LatLngLiteral, flower: string }
 
@@ -27,22 +29,23 @@ const containerStyle = {
 
   };
 
-export const GMap = () => (
-  <APIProvider apiKey={"API_KEY"}>
+export const GMap = () => {
+  return (
+  <APIProvider apiKey={API_KEY}>
     <div style={containerStyle}>
     <Map
       defaultCenter={{lat: 39.68152, lng: -75.74065}}
       defaultZoom={12}
       gestureHandling='greedy'
       disableDefaultUI
-      mapId='DEMO_MAP_ID'
+      mapId='DEMO_MAP_ID' // allows use of basic dynamic markers
     >
       <PoiMarkers pois={locations}/>
     </Map>
     </div>
   </APIProvider>
 );
-
+}
 
 
 const PoiMarkers = (props: {pois: Poi[]}) => {
