@@ -1,6 +1,6 @@
 import userLogo from "./Sprout.webp";
 import { FlowerPop } from "./popupcomps/flowerpop";
-import { QuestionPop } from "./popupcomps/questionpop";
+import { QuestionPop } from "./popupcomps/q";
 
 export function Welcome() {
   return (

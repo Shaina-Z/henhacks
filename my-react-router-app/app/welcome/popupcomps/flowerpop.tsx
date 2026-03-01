@@ -9,12 +9,12 @@ import tieDyeRose from "../Tie-dye_Rose.webp";
 import violet from "../Violet.webp";
 
 const PLANT_OPTIONS = [
-  { image: violet, alt: "Violets" },
-  { image: rose, alt: "Roses" },
-  { image: tieDyeRose, alt: "Tie-dye Roses" },
-  { image: greenCarnation, alt: "Green Carnation" },
-  { image: pansies, alt: "Pansies" },
-  { image: lavender, alt: "Lavenders" },
+{ image: violet, alt: "Violets", info : "Sappho, the ancient Greek poet, often referenced violets in her poems, associating them with female love and affection." },
+  { image: rose, alt: "Roses", info: "Roses represent love in many cultures. However, for the trans community, they have often been used to honor trans individuals and their experiences." },
+  { image: tieDyeRose, alt: "Tie-dye Roses", info: "While first associated with Woodstock and the love and peace movement, tie-dye roses have since become a symbol of pride and celebration in the LGBTQ+ community." },
+  { image: greenCarnation, alt: "Green Carnation", info: "Popularized by writer and wit Oscar Wilde in 1892; this flower became a symbol of gay identity and was worn as a coded signal of same-sex attraction." },
+  { image: pansies, alt: "Pansies", info: "Pansies were once associated with effeminate behavior and the term pansy was used to describe said behavior in the 18th century. Now the term has been reclaimed and some gay bars done the name in their branding." },
+  { image: lavender, alt: "Lavenders", info: "Lavender has been used to describe both gay and lesbian identities in various cultures and contexts." },
 ];
 
 const TASK_OPTIONS = [
@@ -104,12 +104,12 @@ export function FlowerPop() {
         {panel === "choose" ? (
           /* choose a plant first */
           <div className="flex flex-col items-center space-y-3">
-            <p className="text-sm font-medium">Pick your flower:</p>
+            <p className="text-sm font-medium text-blue-700">Pick your flower:</p>
             <div className="grid grid-cols-2 gap-2">
               {PLANT_OPTIONS.map((opt) => (
                 <label
                   key={opt.alt}
-                  className="flex cursor-pointer items-center gap-2 rounded border p-1 hover:bg-gray-200"
+                  className="relative group flex cursor-pointer items-center gap-2 rounded border p-1 bg-blue-300 hover:bg-blue-100 hover:scale-125 transition-transform"
                 >
                   <input
                     type="radio"
@@ -121,6 +121,12 @@ export function FlowerPop() {
                   />
                   <img src={opt.image} alt={opt.alt} className="h-8 w-8 rounded" />
                   <span className="text-xs">{opt.alt}</span>
+
+                  {/* hover box with info text */}
+                  <div className="absolute right-full top-1/2 -translate-y-1/2 mr-2 w-48 rounded bg-gray-800 p-2 text-white
+                      opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50">
+                    <p className="text-sm leading-tight">{opt.info}</p>
+                  </div>
                 </label>
               ))}
             </div>
