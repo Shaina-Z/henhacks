@@ -7,15 +7,14 @@ import pansies from "../Pansies.webp";
 import rose from "../Rose.webp";
 import tieDyeRose from "../Tie-dye_Rose.webp";
 import violet from "../Violet.webp";
-import {Button} from 'react-bootstrap';
 
 const PLANT_OPTIONS = [
+  { image: violet, alt: "Violets" },
+  { image: rose, alt: "Roses" },
+  { image: tieDyeRose, alt: "Tie-dye Roses" },
   { image: greenCarnation, alt: "Green Carnation" },
-  { image: lavender, alt: "Lavender" },
   { image: pansies, alt: "Pansies" },
-  { image: rose, alt: "Rose" },
-  { image: tieDyeRose, alt: "Tie-dye Rose" },
-  { image: violet, alt: "Violet" },
+  { image: lavender, alt: "Lavenders" },
 ];
 
 const TASK_OPTIONS = [
@@ -47,10 +46,10 @@ function picktasks(taskCount: number) {
 
 //creates a popup button on the bottom right of the screen that shows a sprout when clicked.
 export function FlowerPop() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [panel, setPanel] = useState<"choose" | "tasks">("choose");
   // which plant the user picked; used both for display in selector and final flower image
   const [chosen, setChosen] = useState<string>(PLANT_OPTIONS[0].alt);
-  // whether the user has locked in a plant and started tasks
-  const [plantChosen, setPlantChosen] = useState(false);
 
   const [selectedTasks] = useState(() => picktasks(3));
   const [tasks, setTasks] = useState([false, false, false]);
@@ -82,8 +81,17 @@ export function FlowerPop() {
     );
   };
 
+  const handleStartGrowing = () => {
+    setPanel("tasks");
+    setIsOpen(true);
+  };
+
   return (
-    <details className="fixed right-4 bottom-4 z-40">
+    <details
+      open={isOpen}
+      onToggle={(event) => setIsOpen(event.currentTarget.open)}
+      className="fixed right-4 bottom-4 z-40"
+    >
       <summary
         aria-label="Toggle sprout popup"
         className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-md border border-gray-300 bg-white text-xl shadow-sm hover:bg-gray-50 [&::-webkit-details-marker]:hidden"
@@ -92,8 +100,8 @@ export function FlowerPop() {
       </summary>
       
       {/* plant selector or task container, depending on state */}
-      <div className="absolute right-0 bottom-12 flex h-[40rem] w-96 flex-col rounded-lg border border-gray-300 bg-yellow-100 p-3 shadow-md">
-        {!plantChosen ? (
+      <div className={`absolute right-0 bottom-12 flex h-[40rem] w-96 flex-col rounded-lg border border-gray-300 p-3 shadow-md ${panel === "choose" ? "bg-yellow-200" : "bg-yellow-100"}`}>
+        {panel === "choose" ? (
           /* choose a plant first */
           <div className="flex flex-col items-center space-y-3">
             <p className="text-sm font-medium">Pick your flower:</p>
@@ -117,15 +125,19 @@ export function FlowerPop() {
               ))}
             </div>
             <button
-              onClick={() => setPlantChosen(true)}
+              type="button"
+              onClick={handleStartGrowing}
               className="mt-2 rounded bg-blue-600 px-4 py-1 text-white hover:bg-blue-700"
             >
-              Select and start tasks
+              Start Growing!
             </button>
           </div>
         ) : (
           /* show tasks checklist */
           <>
+            <p className="mb-2 text-center text-sm font-medium text-gray-800">
+              1 task = sprout · 2 tasks = half bloom · 3 tasks = full bloom ({chosen})
+            </p>
             <div className="ml-auto w-full max-w-60 space-y-2 self-end text-right">
               <label className="flex items-center justify-end gap-2 text-sm text-gray-800">
                 <span>{selectedTasks[0]}</span>
