@@ -1,7 +1,22 @@
 import { useMemo, useState } from "react";
 import sprout from "../Sprout.webp";
 import halfBloom from "../Half_bloom.webp";
+import greenCarnation from "../Green_Carnation.webp";
+import lavender from "../Lavender.webp";
+import pansies from "../Pansies.webp";
+import rose from "../Rose.webp";
 import tieDyeRose from "../Tie-dye_Rose.webp";
+import violet from "../Violet.webp";
+import {Button} from 'react-bootstrap';
+
+const PLANT_OPTIONS = [
+  { image: greenCarnation, alt: "Green Carnation" },
+  { image: lavender, alt: "Lavender" },
+  { image: pansies, alt: "Pansies" },
+  { image: rose, alt: "Rose" },
+  { image: tieDyeRose, alt: "Tie-dye Rose" },
+  { image: violet, alt: "Violet" },
+];
 
 const TASK_OPTIONS = [
   "Go on a 15-minute walk outside",
@@ -32,6 +47,11 @@ function picktasks(taskCount: number) {
 
 //creates a popup button on the bottom right of the screen that shows a sprout when clicked.
 export function FlowerPop() {
+  // which plant the user picked; used both for display in selector and final flower image
+  const [chosen, setChosen] = useState<string>(PLANT_OPTIONS[0].alt);
+  // whether the user has locked in a plant and started tasks
+  const [plantChosen, setPlantChosen] = useState(false);
+
   const [selectedTasks] = useState(() => picktasks(3));
   const [tasks, setTasks] = useState([false, false, false]);
 
@@ -43,7 +63,8 @@ export function FlowerPop() {
     }
 
     if (checkCount === 3) {
-      return { image: tieDyeRose, alt: "Tie-dye-rose" };
+      const plantObj = PLANT_OPTIONS.find((opt) => opt.alt === chosen);
+      return plantObj ? { image: plantObj.image, alt: chosen } : null;
     }
 
     if (checkCount === 2) {
@@ -51,7 +72,7 @@ export function FlowerPop() {
     }
 
     return { image: sprout, alt: "Sprout" };
-  }, [checkCount]);
+  }, [checkCount, chosen]);
 
   const toggleTask = (index: number) => {
     setTasks((previousTasks) =>
@@ -69,36 +90,74 @@ export function FlowerPop() {
       >
         🌱
       </summary>
+      
+      {/* plant selector or task container, depending on state */}
       <div className="absolute right-0 bottom-12 flex h-[40rem] w-96 flex-col rounded-lg border border-gray-300 bg-yellow-100 p-3 shadow-md">
-        <div className="ml-auto w-full max-w-60 space-y-2 self-end text-right">
-          <label className="flex items-center justify-end gap-2 text-sm text-gray-800">
-            <span>{selectedTasks[0]}</span>
-            <input
-              type="checkbox"
-              checked={tasks[0]}
-              onChange={() => toggleTask(0)}
-              className="h-4 w-4"
-            />
-          </label>
-          <label className="flex items-center justify-end gap-2 text-sm text-gray-800">
-            <span>{selectedTasks[1]}</span>
-            <input
-              type="checkbox"
-              checked={tasks[1]}
-              onChange={() => toggleTask(1)}
-              className="h-4 w-4"
-            />
-          </label>
-          <label className="flex items-center justify-end gap-2 text-sm text-gray-800">
-            <span>{selectedTasks[2]}</span>
-            <input
-              type="checkbox"
-              checked={tasks[2]}
-              onChange={() => toggleTask(2)}
-              className="h-4 w-4"
-            />
-          </label>
-        </div>
+        {!plantChosen ? (
+          /* choose a plant first */
+          <div className="flex flex-col items-center space-y-3">
+            <p className="text-sm font-medium">Pick your flower:</p>
+            <div className="grid grid-cols-2 gap-2">
+              {PLANT_OPTIONS.map((opt) => (
+                <label
+                  key={opt.alt}
+                  className="flex cursor-pointer items-center gap-2 rounded border p-1 hover:bg-gray-200"
+                >
+                  <input
+                    type="radio"
+                    name="flower"
+                    value={opt.alt}
+                    checked={chosen === opt.alt}
+                    onChange={() => setChosen(opt.alt)}
+                    className="h-4 w-4"
+                  />
+                  <img src={opt.image} alt={opt.alt} className="h-8 w-8 rounded" />
+                  <span className="text-xs">{opt.alt}</span>
+                </label>
+              ))}
+            </div>
+            <button
+              onClick={() => setPlantChosen(true)}
+              className="mt-2 rounded bg-blue-600 px-4 py-1 text-white hover:bg-blue-700"
+            >
+              Select and start tasks
+            </button>
+          </div>
+        ) : (
+          /* show tasks checklist */
+          <>
+            <div className="ml-auto w-full max-w-60 space-y-2 self-end text-right">
+              <label className="flex items-center justify-end gap-2 text-sm text-gray-800">
+                <span>{selectedTasks[0]}</span>
+                <input
+                  type="checkbox"
+                  checked={tasks[0]}
+                  onChange={() => toggleTask(0)}
+                  className="h-4 w-4"
+                />
+              </label>
+              <label className="flex items-center justify-end gap-2 text-sm text-gray-800">
+                <span>{selectedTasks[1]}</span>
+                <input
+                  type="checkbox"
+                  checked={tasks[1]}
+                  onChange={() => toggleTask(1)}
+                  className="h-4 w-4"
+                />
+              </label>
+              <label className="flex items-center justify-end gap-2 text-sm text-gray-800">
+                <span>{selectedTasks[2]}</span>
+                <input
+                  type="checkbox"
+                  checked={tasks[2]}
+                  onChange={() => toggleTask(2)}
+                  className="h-4 w-4"
+                />
+              </label>
+            </div>
+          </>
+        )}
+
         {flowerState && (
           <img src={flowerState.image} alt={flowerState.alt} className="mx-auto mt-auto h-auto w-36 shrink-0 rounded" />
         )}
