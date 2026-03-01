@@ -1,7 +1,10 @@
 import userLogo from "./Sprout.webp";
+import { FlowerPop } from "./popupcomps/flowerpop";
 
 export function Welcome() {
   return (
+
+    // This is the ? popup
     <main className="relative flex items-center justify-center pt-16 pb-4">
       <details className="fixed top-4 right-4 z-40">
         <summary
@@ -15,6 +18,8 @@ export function Welcome() {
         </div>
       </details>
 
+
+
       <div className="flex min-h-0 flex-1 flex-col items-center">
         <header className="flex flex-col items-center gap-9">
           <div className="w-[500px] max-w-[100vw] p-4">
@@ -23,17 +28,10 @@ export function Welcome() {
         </header>
       </div>
 
-      <details className="fixed right-4 bottom-4 z-40">
-        <summary
-          aria-label="Toggle sprout popup"
-          className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-md border border-gray-300 bg-white text-xl shadow-sm hover:bg-gray-50 [&::-webkit-details-marker]:hidden"
-        >
-          🌱
-        </summary>
-        <div className="absolute right-0 bottom-12 flex h-[40rem] w-96 flex-col rounded-lg border border-gray-300 bg-white p-3 shadow-md">
-          <img src={userLogo} alt="Sprout" className="mx-auto mt-auto h-auto w-36 shrink-0 rounded" />
-        </div>
-      </details>
+      <div>
+        <FlowerPop />
+      </div>
+
     </main>
   );
 }
